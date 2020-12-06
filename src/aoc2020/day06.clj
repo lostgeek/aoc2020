@@ -9,28 +9,39 @@
                  slurp
                  string/trim
                  (#(string/split % #"\n")))
-        empty-lines (concat [-1] (keep-indexed #(if (= "" %2) %1) data) [(count data)])
+        empty-lines (concat [-1]
+                            (keep-indexed #(if (= "" %2) %1) data)
+                            [(count data)])
         slices (partition 2 1 empty-lines)]
     (for [s slices]
       (let [forms (subvec data (inc (first s)) (second s))]
-        (for [form forms]
-          (set (char-array form)))))))
+        (map #(set (char-array %)) forms)))))
+
+(def questions (map char (range (int \a) (inc (int \z)))))
+
+(defn check-group-1
+  [group]
+  (let [checks
+        (for [q questions]
+          (pos? (count (filter #(contains? % q) group))))]
+    (count (filter identity checks))))
+
+(defn check-group-2
+  [group]
+  (let [checks
+        (for [q questions]
+          (= (count group)
+             (count (filter #(contains? % q) group))))]
+    (count (filter identity checks))))
 
 (defn part1
   [groups]
-  (apply +
-         (for [g groups]
-           (count (filter identity
-                          (for [c (map char (range (int \a) (inc (int \z))))]
-                            (pos? (count (filter #(contains? % c) g)))))))))
+  (apply + (map check-group-1 groups)))
 
 (defn part2
   [groups]
-  (apply +
-         (for [g groups]
-           (count (filter identity
-                          (for [c (map char (range (int \a) (inc (int \z))))]
-                            (= (count g) (count (filter #(contains? % c) g)))))))))
+  (apply + (map check-group-2 groups)))
+
 (defn main
   [& args]
   (let [groups (get-data "resources/day06.txt")]

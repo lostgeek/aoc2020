@@ -1,4 +1,5 @@
-# aoc2020
+# Advent of Code 2020
+These are my solutions to the [Advent of Code 2020](https://adventofcode.com) challenges. I try to solve them as fast as I can (and sometimes refactor the solutions later on to be a bit tidier).
 
 ## Solve times
 Day 1: --

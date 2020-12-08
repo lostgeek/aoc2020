@@ -37,23 +37,28 @@
       {:ip @ip :acc @acc :reason :terminated}
       {:ip @ip :acc @acc :reason :loop-found})))
 
+(defn fix-code
+  [code line]
+  (case (get-in code [line 0])
+    :nop (assoc-in code [line 0] :jmp)
+    :jmp (assoc-in code [line 0] :nop)
+    code))
+
 (defn part1
   [code]
   (find-loop code))
 
 (defn part2
   [code]
-  (first (filter identity
-                 (for [i (range (count code))]
-                   (case (first (nth code i))
-                     :nop (let [out (find-loop (assoc-in code [i 0] :jmp))]
-                            (when (= :terminated (:reason out))
-                              out))
-                     :jmp (let [out (find-loop (assoc-in code [i 0] :nop))]
-                            (when (= :terminated (:reason out))
-                              out))
-                     :acc nil
-                     nil)))))
+  (first
+    (filter identity
+            (for [i (range (count code))]
+              (if (or (= :nop (get-in code [i 0]))
+                      (= :jmp (get-in code [i 0])))
+                (let [out (find-loop (fix-code code i))]
+                  (when (= :terminated (:reason out))
+                    out))
+                nil)))))
 
 (defn main
   [& args]

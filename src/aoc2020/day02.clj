@@ -32,5 +32,5 @@
 (defn main
   [& args]
   (let [data (get-data "resources/day02.txt")]
-    (str "part 1: " (count (filter identity (map validate-part1 data))) "\n"
-         "part 2: " (count (filter identity (map validate-part2 data))))))
+    (str "part 1: " (count (filter validate-part1 data)) "\n"
+         "part 2: " (count (filter validate-part2 data)))))

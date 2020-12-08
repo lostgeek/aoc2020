@@ -2,29 +2,53 @@
 
 ## Solve times
 Day 1: --
+
 Day 2: --
+
 Day 3: 7 min, 5 min
+
 Day 4: 34 min, 20 min
+
 Day 5: 12 min, 6 min
+
 Day 6: 37 min, 1 min
+
 Day 7: 71 min, 8 min
+
 Day 8: 26 min, 15 min
+
 Day 9: 
+
 Day 10: 
+
 Day 11: 
+
 Day 12: 
+
 Day 13: 
+
 Day 14: 
+
 Day 15: 
+
 Day 16: 
+
 Day 17: 
+
 Day 18: 
+
 Day 19: 
+
 Day 20: 
+
 Day 21: 
+
 Day 22: 
+
 Day 23: 
+
 Day 24: 
+
 Day 25: 
 
 ## License

@@ -20,24 +20,24 @@
       (or (first (filter #(= curr (apply + %)) (combo/combinations prev 2)))
           curr))))
 
-(defn search-sum
-  [data numbers goal]
-  (if (empty? data)
-    nil
-    (let [numbers (conj numbers (first data))
-          sum (apply + numbers)
-          data (rest data)]
-      (if (<= goal sum)
-        (if (and (= goal sum)
-                 (< 1 (count numbers)))
-          numbers nil) ;(println numbers))
-        (search-sum data numbers goal)))))
-
 (defn find-contiguous-range
-  [data number]
-  (first (filter identity
-           (for [i (range (count data))]
-             (search-sum (nthrest data i) [] number)))))
+  [d goal]
+  (loop [numbers []
+         sum 0
+         data d]
+    (if (= sum goal)
+      numbers
+      (if (< sum goal)
+        (let [n (first data)]
+          (recur
+            (conj numbers n)
+            (+ sum n)
+            (rest data)))
+        (let [n (first numbers)]
+          (recur
+            (vec (rest numbers))
+            (- sum n)
+            data))))))
 
 (defn part1
   [data]

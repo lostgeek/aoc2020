@@ -18,7 +18,7 @@ Day 7: 71 min, 8 min
 
 Day 8: 26 min, 15 min
 
-Day 9: 
+Day 9: 15 min, 24 min
 
 Day 10: 
 

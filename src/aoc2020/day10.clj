@@ -20,16 +20,16 @@
 (defn part2
   [d]
   (let [d (conj d 0 (+ 3 (apply max d)))]
-    (loop [data (rest (reverse (sort d)))
-           ways {(first (reverse (sort d))) 1}]
+    (loop [data (rest (sort d))
+           ways {(first (sort d)) 1}]
       (let [n (first data)
             data (rest data)
-            ways (assoc ways n (+ (get ways (+ n 1) 0)
-                                  (get ways (+ n 2) 0)
-                                  (get ways (+ n 3) 0)))]
+            ways (assoc ways n (+ (get ways (- n 1) 0)
+                                  (get ways (- n 2) 0)
+                                  (get ways (- n 3) 0)))]
         (if (not-empty data)
           (recur data ways)
-          (do (println ways) (get ways 0)))))))
+          (get ways n))))))
 
 (defn main
   [& args]

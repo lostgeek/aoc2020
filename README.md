@@ -20,7 +20,7 @@ Day 8: 26 min, 15 min
 
 Day 9: 15 min, 24 min
 
-Day 10: 
+Day 10: 6 min, 23 min
 
 Day 11: 
 

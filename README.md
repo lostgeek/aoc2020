@@ -22,7 +22,7 @@ Day 9: 15 min, 24 min
 
 Day 10: 6 min, 23 min
 
-Day 11: 
+Day 11: 14 min, 25 min
 
 Day 12: 
 

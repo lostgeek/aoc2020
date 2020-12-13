@@ -24,7 +24,7 @@ Day 10: 6 min, 23 min
 
 Day 11: 14 min, 25 min
 
-Day 12: 
+Day 12: 21 min, 8 min
 
 Day 13: 
 

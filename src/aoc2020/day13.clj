@@ -31,27 +31,38 @@
     (* (- arrival (:time notes)) bus)))
 
 (defn create-timetable
-  [busses zerobus]
+  [busses]
   (remove #(= :x (second %)) (map-indexed vector busses)))
+
+(defn vec-remove
+  "remove elem in coll"
+  [coll pos]
+  (vec (concat (subvec coll 0 pos) (subvec coll (inc pos)))))
+
+(defn find-dt
+  [busses i goal]
+  (let [busses (map second busses)
+        one-dt (apply * (vec-remove (vec busses) i))
+        bus (nth busses i)
+        mods (map #(mod (* one-dt %) bus) (range bus))]
+    (* one-dt (first (first (filter #(= goal (second %)) (map-indexed vector mods)))))))
 
 (defn part2
   [notes min-t]
-  (let [max-bus (apply max (remove #(= :x %) (:busses notes)))
-        busses (create-timetable (:busses notes) max-bus)
-        offset (first (first (filter #(= max-bus (second %)) busses)))]
-    (loop [t (- (* max-bus (long (Math/ceil (/ min-t max-bus))))
-                offset)
-           cnt 0]
-      (when (zero? (mod cnt 100000))
-        (println t))
-      (if (every? identity
-                  (for [[dt bus] busses]
-                    (= (mod (- dt) bus) (mod t bus))))
-        t
-        (recur (+ t max-bus) (inc cnt))))))
+  (let [busses (create-timetable (:busses notes))]
+    (loop [t 0
+           i 0]
+      (let [[ind bus] (nth busses i)
+            goal (mod (- ind) bus)
+            dt (find-dt busses i goal)
+            t (+ t dt)]
+        (if (< (inc i) (count busses))
+          (recur t (inc i))
+          (mod t (apply * (map second busses))))))))
+
 (defn main
   [& args]
-  (let [data (get-data "resources/day13-test-4.txt")
+  (let [data (get-data "resources/day13.txt")
         min-t 0]
     (str "part 1: " (time (part1 data)) "\n"
          "part 2: " (time (part2 data min-t)))))

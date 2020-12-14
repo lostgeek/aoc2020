@@ -32,7 +32,7 @@
 
 (defn create-timetable
   [busses]
-  (remove #(= :x (second %)) (map-indexed vector busses)))
+  (map (fn [x] {:offset (first x) :bus (second x)}) (remove #(= :x (second %)) (map-indexed vector busses))))
 
 (defn vec-remove
   "remove elem in coll"
@@ -41,7 +41,7 @@
 
 (defn find-dt
   [busses i goal]
-  (let [busses (map second busses)
+  (let [busses (map :bus busses)
         one-dt (apply * (vec-remove (vec busses) i))
         bus (nth busses i)
         mods (map #(mod (* one-dt %) bus) (range bus))]
@@ -52,13 +52,13 @@
   (let [busses (create-timetable (:busses notes))]
     (loop [t 0
            i 0]
-      (let [[ind bus] (nth busses i)
-            goal (mod (- ind) bus)
+      (let [{:keys [offset bus]} (nth busses i)
+            goal (mod (- offset) bus)
             dt (find-dt busses i goal)
             t (+ t dt)]
         (if (< (inc i) (count busses))
           (recur t (inc i))
-          (mod t (apply * (map second busses))))))))
+          (mod t (apply * (map :bus busses))))))))
 
 (defn main
   [& args]

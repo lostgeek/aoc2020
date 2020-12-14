@@ -51,29 +51,28 @@
         (recur code (exec-1 memory line))))))
 
 (defn calc-address
-  [p X-inds fill-ins]
+  [p max-i X-inds fill-ins]
+
   (loop [pos p
          i 0]
-      (if (= i (count X-inds))
-        pos
-        (let [ind (- 35 (nth X-inds i))
-              fill (nth fill-ins i)]
-          (if (= \0 fill)
-            (recur (bit-clear pos ind) (inc i))
-            (recur (bit-set pos ind) (inc i)))))))
+    (if (= i max-i)
+      pos
+      (let [ind (nth X-inds i)]
+        (if (bit-test fill-ins ind)
+          (recur (bit-clear pos ind) (inc i))
+          (recur (bit-set pos ind) (inc i)))))))
 
 (defn addresses
   [pos]
   (let [pos (bit-or pos (Long/parseLong (string/replace @mask #"X" "0") 2))
         X-count (count (filter #(= \X %) @mask))
-        X-inds (map first
+        X-inds (map #(- 35 (first %))
                     (filter #(= \X (second %))
-                            (map-indexed vector @mask)))]
-    (for [i (range (Math/pow 2 X-count))]
-      (let [fill-ins (concat (take (- X-count (count (Long/toBinaryString i)))
-                                   (repeat \0))
-                             (Long/toBinaryString i))]
-        (calc-address pos X-inds fill-ins)))))
+                            (map-indexed vector @mask)))
+        max-i (count X-inds)]
+    (for [fill-ins (range (Math/pow 2 X-count))]
+      (do (when (zero? (mod fill-ins 10000)) (println fill-ins))
+          (calc-address pos max-i X-inds fill-ins)))))
 
 (defn exec-2
   [memory {:keys [cmd pos value] :as line}]
@@ -91,6 +90,7 @@
   [data]
   (loop [code data
          memory {}]
+    (println (count code))
     (let [line (first code)
           code (rest code)]
       (if (nil? line)
@@ -99,6 +99,6 @@
 
 (defn main
   [& args]
-  (let [data (get-data "resources/day14.txt")]
+  (let [data (get-data "resources/day14-harder-test.txt")]
     (str "part 1: " (time (part1 data)) "\n"
          "part 2: " (time (part2 data)))))

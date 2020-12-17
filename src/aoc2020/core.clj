@@ -15,6 +15,7 @@
   (:require [aoc2020.day14 :as day14])
   (:require [aoc2020.day15 :as day15])
   (:require [aoc2020.day16 :as day16])
+  (:require [aoc2020.day17 :as day17])
   (:gen-class))
 
 (defn -main
@@ -38,4 +39,5 @@
       14 (day14/main)
       15 (day15/main)
       16 (day16/main)
+      17 (day17/main)
       "Day not found.")))

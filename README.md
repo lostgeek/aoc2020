@@ -34,7 +34,7 @@ Day 15: 14 min, 24 min
 
 Day 16: 22 min, 48 min
 
-Day 17: 
+Day 17: 36 min, 4 min
 
 Day 18: 
 

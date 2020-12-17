@@ -52,9 +52,17 @@
           (map (partial invalid-sum (:rules data))
                (:nearby data))))
 
+(defn check-validity
+  [rules ticket]
+  "Checks that every number on ticket is in the range of some rule"
+  (every? identity
+          (for [n ticket]
+            (some true?
+                    (map #(contains? % n) (vals rules))))))
+
 (defn remove-invalid
   [rules tickets]
-  (remove #(pos? (invalid-sum rules %)) tickets))
+  (filter #(check-validity rules %) tickets))
 
 (defn try-field-at-pos
   [rule tickets pos]
@@ -77,15 +85,9 @@
       (if (empty? unmatched)
         (if (empty? tried)
           matched
-          (if (= 1 (count tried))
-            ; only one unmatched.. seems weird but let's just fix this XXX
-            (let [only-possibility (first (sets/difference (set (range (count (first tickets))))
-                                                           (set (vals matched))))]
-              (assoc matched (first tried) only-possibility))
-            ; tried all unmatched, restarting from the beginning
-            (recur (conj (rest tried) (first tried))
-                   matched
-                   [])))
+          (recur (conj (rest tried) (first tried))
+                 matched
+                 []))
 
         (let [field (first unmatched)
               possible-pos (calc-possible-pos (get rules field) tickets matched)]
@@ -105,13 +107,10 @@
     (reduce *
             (for [field (remove #(not (string/starts-with? (name %) "departure"))
                                 (keys rules))]
-              (nth our (get order field))
-              ))))
+              (nth our (get order field))))))
 
 (defn main
   [& args]
-  ; (let [data (get-data "resources/day16-test.txt")]
-  ; (let [data (get-data "resources/day16-test2.txt")]
   (let [data (get-data "resources/day16.txt")]
     (str "part 1: " (time (part1 data)) "\n"
          "part 2: " (time (part2 data)))))

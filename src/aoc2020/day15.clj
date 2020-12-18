@@ -5,40 +5,34 @@
 
 (defn get-data
   [f]
-  (let [data (-> f
+  (let [data (->> f
                  slurp
                  string/trim
                  (#(string/split % #","))
-                 (#(map read-string %))
+                 (map read-string)
                  vec)]
     data))
 
 (defn prepare-history
   [data]
   (into (hash-map) (apply merge
-                         (map-indexed (fn [ind x]
-                                        {x {:prev nil :recent ind}})
-                                      data))))
-
-(defn update-history
-  [history n i]
-  (let [entry (get history n)]
-    (assoc history n {:prev (:recent entry)
-                      :recent i})))
+                          (map-indexed (fn [ind x]
+                                         {x ind})
+                                       data))))
 
 (defn find-nth
   [data n]
   (loop [history (prepare-history data)
          latest (last data)
          i (count data)]
-    (when (zero? (mod i 1000000)) (println (float (/ i n))))
+    ; (when (zero? (mod i 1000000)) (println (float (/ i n))))
     (if (= i n)
       latest
       (let [entry (get history latest)
-            diff (if (nil? (:prev entry))
+            diff (if (nil? entry)
                    0
-                   (- (:recent entry) (:prev entry)))]
-        (recur (update-history history diff i)
+                   (- (dec i) entry))]
+        (recur (assoc history latest (dec i))
                diff
                (inc i))))))
 
